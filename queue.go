@@ -128,6 +128,7 @@ func getFileSize(file *os.File) int64 {
 		LogError("Unable to get file size", fileInfoError)
 		return 0
 	}
+
 	const mb = 1024 * 1024
 	return fileInfo.Size() / mb
 }
