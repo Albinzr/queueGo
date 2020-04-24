@@ -169,6 +169,8 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 			}
 		}
 	}
+	fmt.Println("finished reading***................")
+	c.isReading = false
 }
 
 //CommitFile :- removes file from storage
