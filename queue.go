@@ -154,6 +154,7 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 	}()
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
+		fmt.Println("in")
 		if !c.isReading {
 			c.isReading = true
 			var files = c.getAllFileFromDir()
