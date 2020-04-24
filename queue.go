@@ -149,7 +149,7 @@ func (c *Config) Read(callback func(message string, fileName string)) {
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
 	go func() {
 		defer func() {
-			fmt.Println("finished reading***:", files)
+			fmt.Println("finished reading***")
 			c.isReading = false
 		}()
 		ticker := time.NewTicker(interval)
