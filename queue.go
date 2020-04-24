@@ -146,7 +146,7 @@ func (c *Config) Read(callback func(message string, fileName string)) {
 }
 
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
-	fmt.Println("Reading file status:", c.isReading)
+	fmt.Println("Reading file status**:", c.isReading)
 	go func() {
 		defer func() {
 			fmt.Println("finished reading***")
