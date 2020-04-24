@@ -142,7 +142,7 @@ func getFilePath(path string) string {
 //Read from file logic start
 
 func (c *Config) Read(callback func(message string, fileName string)) {
-	c.schedule(callback, 30*time.Second)
+	c.schedule(callback, 5*time.Second)
 }
 
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
