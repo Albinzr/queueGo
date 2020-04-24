@@ -140,13 +140,16 @@ func getFilePath(path string) string {
 // Write to file logic end
 
 //Read from file logic start
+
 func (c *Config) Read(callback func(message string, fileName string)) {
+	fmt.Println("Reading file status:", c.isReading)
 	c.schedule(callback, 30*time.Second)
 }
 
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
 	go func() {
 		defer func() {
+			fmt.Println("finished reading***:", files)
 			c.isReading = false
 		}()
 		ticker := time.NewTicker(interval)
@@ -166,6 +169,7 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 				}
 			}
 		}
+		//
 	}()
 
 }
