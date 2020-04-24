@@ -148,30 +148,26 @@ func (c *Config) Read(callback func(message string, fileName string)) {
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
 	fmt.Println("Reading file status**:", c.isReading)
 
-	defer func() {
-		fmt.Println("finished reading***")
-		c.isReading = false
-	}()
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
-		fmt.Println("in")
 		if !c.isReading {
 			c.isReading = true
 			var files = c.getAllFileFromDir()
-			if len(files) > 0 {
+			if files != nil && len(files) > 0 {
 				fmt.Println("files available to read:", files)
-			}
-			if files != nil {
 				for _, file := range files {
 					fileData := c.readFile(file.Name())
 					fileInfo := convertFileDataToString(fileData)
 					callback(fileInfo, file.Name())
 				}
+				fmt.Println("finished reading***................")
+				c.isReading = false
+			} else {
+				fmt.Println("No files to read waiting for new set of files")
 			}
 		}
 	}
-	fmt.Println("finished reading***................")
-	c.isReading = false
+
 }
 
 //CommitFile :- removes file from storage
