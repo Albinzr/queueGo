@@ -163,7 +163,6 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 				fmt.Println("finished reading***................")
 				c.isReading = false
 			} else {
-				fmt.Println("No files to read waiting for new set of files")
 				c.isReading = false
 			}
 		}
