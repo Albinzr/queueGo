@@ -146,15 +146,15 @@ func (c *Config) Read(callback func(message string, fileName string)) {
 }
 
 func (c *Config) schedule(callback func(message string, fileName string), interval time.Duration) {
-	fmt.Println("Reading file status init**:", c.isReading)
+	fmt.Println("Reading file status**:", c.isReading)
 
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
 		if !c.isReading {
 			c.isReading = true
+			fmt.Println("Reading file status**:", c.isReading)
 			var files = c.getAllFileFromDir()
 			if files != nil && len(files) > 0 {
-				fmt.Println("Reading file status**:", c.isReading)
 				fmt.Println("files available to read:", files)
 				for _, file := range files {
 					fileData := c.readFile(file.Name())
@@ -163,11 +163,10 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 				}
 				fmt.Println("finished reading***................")
 				c.isReading = false
-				fmt.Println("Reading file status**:", c.isReading)
 			} else {
 				c.isReading = false
 			}
-
+			fmt.Println("Reading file status**:", c.isReading)
 		}
 	}
 
