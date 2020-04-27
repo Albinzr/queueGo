@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
@@ -154,9 +155,12 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 			if files != nil && len(files) > 0 {
 				fmt.Println("files available to read:", files, "Reading file status**:", c.isReading)
 				for _, file := range files {
-					fileData := c.readFile(file.Name())
-					fileInfo := convertFileDataToString(fileData)
-					callback(fileInfo, file.Name())
+					fmt.Println(file.Mode().IsRegular(), filepath.Ext(file.Name()))
+					if file.Mode().IsRegular() && filepath.Ext(file.Name()) == ".txt" {
+						fileData := c.readFile(file.Name())
+						fileInfo := convertFileDataToString(fileData)
+						callback(fileInfo, file.Name())
+					}
 				}
 				fmt.Println("Finished reading file status**:", c.isReading)
 			}
@@ -173,7 +177,6 @@ func (c *Config) CommitFile(fileName string) {
 
 func (c *Config) getAllFileFromDir() []os.FileInfo {
 	files, filesInfoError := ioutil.ReadDir(c.StoragePath)
-
 	LogError("Unable to get files form dir", filesInfoError)
 	return files
 }
