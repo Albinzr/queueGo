@@ -161,7 +161,7 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 						fmt.Println("1")
 						fileInfo := convertFileDataToString(fileData)
 						fmt.Println("2")
-						go callback(fileInfo, file.Name())
+						callback(fileInfo, file.Name())
 						fmt.Println("3")
 					}
 				}
