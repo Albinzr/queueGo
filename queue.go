@@ -52,10 +52,9 @@ func (c *Config) scheduleQueueCheck(interval time.Duration) {
 
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
-		if c.isWritting {
-			continue
+		if !c.isWritting {
+			c.processQueue()
 		}
-		c.processQueue()
 	}
 
 }
@@ -63,10 +62,6 @@ func (c *Config) scheduleQueueCheck(interval time.Duration) {
 func (c *Config) processQueue() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	defer func() {
-		c.isWritting = false
-	}()
-
 	c.isWritting = true
 	for len(c.queue) > 0 {
 		msg := c.queue[0]
@@ -81,6 +76,7 @@ func (c *Config) processQueue() {
 		}
 		c.queue[0].retries++
 	}
+	c.isWritting = false
 }
 
 //Writre to file logic
@@ -92,8 +88,8 @@ func (c *Config) writeToFile(data string) bool {
 		c.moveFileToTemp()
 		file = createFileIfNotExist("just.txt")
 	}
+	defer file.Close()
 	status := appendToFile(file, data)
-	file.Close()
 	return status
 }
 
@@ -150,9 +146,11 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
+
 		if !c.isReading {
 			c.isReading = true
 			var files = c.getAllFileFromDir()
+
 			if files != nil && len(files) > 0 {
 				fmt.Println("files available to read:", files, "Reading file status**:", c.isReading)
 				for _, file := range files {
@@ -160,14 +158,12 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 					fileInfo := convertFileDataToString(fileData)
 					callback(fileInfo, file.Name())
 				}
-				c.isReading = false
 				fmt.Println("Finished reading file status**:", c.isReading)
-			} else {
-				c.isReading = false
 			}
+			c.isReading = false //called once for loop is completed
 		}
-	}
 
+	}
 }
 
 //CommitFile :- removes file from storage
