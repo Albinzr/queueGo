@@ -82,15 +82,26 @@ func (c *Config) processQueue() {
 
 //Writre to file logic
 func (c *Config) writeToFile(data string) bool {
+	// file := createFileIfNotExist("just.txt")
+	// if getFileSize(file) > c.FileSize {
+	// 	file.Close()
+	// 	c.createTempFolderIfNotExist()
+	// 	c.moveFileToTemp()
+	// 	file = createFileIfNotExist("just.txt")
+	// }
+	// defer file.Close()
+	// status := appendToFile(file, data)
+	// return status
 	file := createFileIfNotExist("just.txt")
+	defer file.Close()
+
+	status := appendToFile(file, data)
+
 	if getFileSize(file) > c.FileSize {
-		file.Close()
 		c.createTempFolderIfNotExist()
 		c.moveFileToTemp()
-		file = createFileIfNotExist("just.txt")
 	}
-	defer file.Close()
-	status := appendToFile(file, data)
+
 	return status
 }
 
