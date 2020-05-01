@@ -137,8 +137,8 @@ func getFileSize(file *os.File) int64 {
 		return 0
 	}
 
-	const kb = 1024
-	return fileInfo.Size() / kb
+	const mb = 1024 * 1024 
+	return fileInfo.Size() / mb
 }
 
 func getFilePath(path string) string {
@@ -169,11 +169,8 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 					fmt.Println(file.Mode().IsRegular(), filepath.Ext(file.Name()))
 					if file.Mode().IsRegular() && filepath.Ext(file.Name()) == ".txt" {
 						fileData := c.readFile(file.Name())
-						fmt.Println("1")
 						fileInfo := convertFileDataToString(fileData)
-						fmt.Println("2")
 						callback(fileInfo, file.Name())
-						fmt.Println("3")
 					}
 				}
 				fmt.Println("Finished reading file status**:", c.isReading)
