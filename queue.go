@@ -137,8 +137,8 @@ func getFileSize(file *os.File) int64 {
 		return 0
 	}
 
-	const mb = 1024 * 1024
-	return fileInfo.Size() / mb
+	const kb = 1024
+	return fileInfo.Size() / kb
 }
 
 func getFilePath(path string) string {
