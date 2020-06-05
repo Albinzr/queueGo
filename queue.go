@@ -85,13 +85,18 @@ func (c *Config) writeToFile(data string) bool {
 
 	file := createFileIfNotExist("just.txt")
 	defer func() {
-		fmt.Println("***********************************************File closed************************************")
-		file.Close()
+		fmt.Println("***********************************************File Sync************************************")
+		file.Sync()
 	}()
 
 	status := appendToFile(file, data)
 
 	if getFileSize(file) > c.FileSize {
+		file.Sync()
+		err := file.Close()
+		if err != nil {
+			fmt.Println("********** Error closing file")
+		}
 		c.createTempFolderIfNotExist()
 		c.moveFileToTemp()
 	}
