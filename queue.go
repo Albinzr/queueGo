@@ -85,7 +85,6 @@ func (c *Config) writeToFile(data string) bool {
 
 	file := createFileIfNotExist("just.txt")
 	defer func() {
-		fmt.Println("***********************************************File Sync************************************")
 		file.Sync()
 	}()
 
@@ -95,7 +94,7 @@ func (c *Config) writeToFile(data string) bool {
 		file.Sync()
 		err := file.Close()
 		if err != nil {
-			fmt.Println("********** Error closing file")
+			LogError("Error closing file",err)
 		}
 		c.createTempFolderIfNotExist()
 		c.moveFileToTemp()
@@ -165,7 +164,7 @@ func (c *Config) schedule(callback func(message string, fileName string), interv
 			if files != nil && len(files) > 0 {
 				fmt.Println("files available to read:", files, "Reading file status**:", c.isReading)
 				for _, file := range files {
-					fmt.Println(file.Mode().IsRegular(), filepath.Ext(file.Name()))
+					//fmt.Println(file.Mode().IsRegular(), filepath.Ext(file.Name()))
 					if file.Mode().IsRegular() && filepath.Ext(file.Name()) == ".txt" {
 						fileData := c.readFile(file.Name())
 						fileInfo := convertFileDataToString(fileData)
@@ -203,7 +202,6 @@ func convertFileDataToString(fileData []byte) string {
 
 func (c *Config) removeFile(fileName string) {
 	removeFileError := os.Remove(c.StoragePath + "/" + fileName)
-	fmt.Println("fileremoved: ", fileName)
 	LogError("Unable to delete file", removeFileError)
 }
 
